@@ -1,7 +1,7 @@
 {
-  "name": "Faded Film Notebook",
-  "short_name": "FadedFilm",
-  "description": "Anonymous personal blog for reflective writing and theme-based storytelling.",
+  "name": "Mr Obah's Journal",
+  "short_name": "Mr Obah",
+  "description": "A reflective personal journal on work, life, discipline, and becoming.",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#f2eadc",

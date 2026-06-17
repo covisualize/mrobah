@@ -1,6 +1,7 @@
 (function () {
   "use strict";
 
+  var siteName = "Mr Obah's Journal";
   var posts = Array.isArray(window.BLOG_POSTS) ? window.BLOG_POSTS.slice() : [];
   posts.sort(function (a, b) {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -41,6 +42,13 @@
       hour: "2-digit",
       minute: "2-digit"
     });
+  }
+
+  function slugify(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   }
 
   function uniqueThemes(list) {
@@ -186,7 +194,7 @@
       featuredNode.innerHTML =
         '<article class="featured-entry">' +
         '<div class="featured-entry-copy">' +
-        '<p class="eyebrow-note">Latest diary note</p>' +
+        '<p class="eyebrow-note">Latest journal entry</p>' +
         "<h2>" +
         escapeHtml(post.title) +
         "</h2>" +
@@ -362,8 +370,8 @@
       var list = state.theme === "All" ? themeList : [state.theme];
       archiveInfo.textContent =
         state.theme === "All"
-          ? "Browsing every emotional thread."
-          : 'Browsing "' + state.theme + '" notes.';
+          ? "Browsing every journal thread."
+          : 'Browsing "' + state.theme + '" entries.';
 
       if (!list.length) {
         archiveNode.innerHTML = '<div class="empty-state">No themes available yet.</div>';
@@ -430,7 +438,7 @@
       return;
     }
 
-    document.title = currentPost.title + " - Faded Film Notebook";
+    document.title = currentPost.title + " | " + siteName;
 
     var bodyContent = currentPost.content
       .map(function (paragraph) {
@@ -524,7 +532,7 @@
         : '<span class="nav-card is-empty"></span>') +
       "</div>";
 
-    var storageKey = "faded-film-comments:" + currentPost.slug;
+    var storageKey = "mr-obah-comments:" + currentPost.slug;
 
     function readComments() {
       try {
@@ -611,9 +619,13 @@
     var saveButton = document.getElementById("saveDraftBtn");
     var clearButton = document.getElementById("clearDraftBtn");
     var exportButton = document.getElementById("exportDraftBtn");
+    var copyPayloadButton = document.getElementById("copyPayloadBtn");
     var previewTitleNode = document.getElementById("draftPreviewTitle");
     var previewThemeNode = document.getElementById("draftPreviewTheme");
     var previewBodyNode = document.getElementById("draftPreviewBody");
+    var publishSlugNode = document.getElementById("publishSlug");
+    var publishExcerptNode = document.getElementById("publishExcerpt");
+    var publishPayloadNode = document.getElementById("publishPayload");
 
     if (
       !titleInput ||
@@ -626,22 +638,26 @@
       !saveButton ||
       !clearButton ||
       !exportButton ||
+      !copyPayloadButton ||
       !previewTitleNode ||
       !previewThemeNode ||
-      !previewBodyNode
+      !previewBodyNode ||
+      !publishSlugNode ||
+      !publishExcerptNode ||
+      !publishPayloadNode
     ) {
       return;
     }
 
     var prompts = [
-      "What did I survive today that no one else noticed?",
-      "Where did I feel most like myself in the last 24 hours?",
-      "What boundary protected my peace this week?",
-      "What emotion keeps returning, and what might it be asking for?",
-      "If I could write one gentle sentence to yesterday's self, what would it be?",
-      "What ordinary moment quietly proved I am healing?"
+      "What became clearer to me today that was still foggy yesterday?",
+      "What part of my work or life is asking for better structure?",
+      "What small promise did I keep that deserves to be noticed?",
+      "What idea has been following me long enough that it needs an entry?",
+      "Where am I confusing motion with progress?",
+      "What sentence would I want to reread a year from now?"
     ];
-    var storageKey = "faded-film-draft:v1";
+    var storageKey = "mr-obah-draft:v1";
     var autoSaveTimer = null;
 
     function computeWordCount(text) {
@@ -669,14 +685,48 @@
       readTimeNode.textContent = computeReadTime(words);
     }
 
+    function getBodyParagraphs() {
+      return bodyInput.value
+        .split(/\n+/)
+        .map(function (paragraph) {
+          return paragraph.trim();
+        })
+        .filter(Boolean);
+    }
+
+    function buildPublishPayload() {
+      var title = titleInput.value.trim();
+      var paragraphs = getBodyParagraphs();
+      var slugBase = slugify(title || "journal-entry");
+      var entryDate = new Date().toISOString().slice(0, 10);
+      var excerpt = paragraphs.length ? paragraphs[0].slice(0, 170) : "";
+      return {
+        title: title || "Untitled entry",
+        slug: slugBase ? entryDate + "-" + slugBase : entryDate + "-journal-entry",
+        date: entryDate,
+        theme: themeInput.value || "Other",
+        readingTime: computeReadTime(computeWordCount(bodyInput.value)),
+        mood: paragraphs[1] || excerpt || "A new note in progress.",
+        excerpt: excerpt || "A new note from the journal.",
+        quote: paragraphs[paragraphs.length - 1] || excerpt || "A new note from the journal.",
+        image: "assets/images/desk-light.png",
+        imageAlt: "Warm desk light beside a notebook.",
+        content: paragraphs
+      };
+    }
+
     function updatePreview() {
       var trimmedBody = bodyInput.value.trim();
       var previewText = trimmedBody
         ? trimmedBody.split(/\n+/).slice(0, 3).join("\n\n")
         : "Begin with the sentence you have been postponing. The preview will settle here as you write.";
       previewTitleNode.textContent = titleInput.value.trim() || "Untitled entry";
-      previewThemeNode.textContent = themeInput.value || "Transitions";
+      previewThemeNode.textContent = themeInput.value || "Building in Public";
       previewBodyNode.textContent = previewText;
+      var payload = buildPublishPayload();
+      publishSlugNode.textContent = payload.slug;
+      publishExcerptNode.textContent = payload.excerpt;
+      publishPayloadNode.textContent = JSON.stringify(payload, null, 2);
     }
 
     function readDraft() {
@@ -735,7 +785,7 @@
       }
 
       titleInput.value = existing.title || "";
-      themeInput.value = existing.theme || "Transitions";
+      themeInput.value = existing.theme || "Building in Public";
       bodyInput.value = existing.body || "";
       updateMetrics();
       updatePreview();
@@ -743,11 +793,8 @@
     }
 
     function sanitizeFileName(value) {
-      var base = (value || "faded-film-entry")
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-      return base || "faded-film-entry";
+      var base = slugify(value || "mr-obah-journal-entry");
+      return base || "mr-obah-journal-entry";
     }
 
     function exportDraft() {
@@ -841,7 +888,7 @@
         return;
       }
       titleInput.value = "";
-      themeInput.value = "Transitions";
+      themeInput.value = "Building in Public";
       bodyInput.value = "";
       window.localStorage.removeItem(storageKey);
       updateMetrics();
@@ -856,6 +903,27 @@
         return;
       }
       exportDraft();
+    });
+
+    copyPayloadButton.addEventListener("click", function () {
+      if (!bodyInput.value.trim()) {
+        bodyInput.focus();
+        setStatus("Write the entry first, then copy the publish payload.");
+        return;
+      }
+      var payload = publishPayloadNode.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(payload)
+          .then(function () {
+            setStatus("Copied publish payload for OpenClaw.");
+          })
+          .catch(function () {
+            setStatus("Copy failed. Select the payload manually.");
+          });
+        return;
+      }
+      setStatus("Clipboard access is unavailable. Select the payload manually.");
     });
 
     renderPrompts();

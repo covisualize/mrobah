@@ -860,6 +860,19 @@ a {
   gap: 12px;
 }
 
+.code-block {
+  margin: 12px 0 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(23, 24, 27, 0.94);
+  color: #f4eee5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
 .prompt-card-mini {
   padding: 16px;
   border-radius: 20px;

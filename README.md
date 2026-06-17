@@ -1,21 +1,22 @@
-# Faded Film Notebook
+# Mr Obah's Journal
 
-Anonymous personal blog starter with a faded-film visual style, theme-based entries, and a built-in writing studio.
+Personal journal site with themed entries, a built-in writing studio, and an OpenClaw-friendly publish handoff.
 
 ## Included pages
 
 - `index.html` - homepage with search + theme filters
 - `archive.html` - browse entries by theme
 - `post.html` - single post page with local comments
-- `studio.html` - private writing studio (autosave + prompt deck + export)
-- `about.html` - boundaries, privacy notes, and comment standards
+- `studio.html` - writing studio with autosave, prompt deck, export, and publish JSON
+- `about.html` - journal intent, publishing rhythm, and comment standards
 - `404.html` - fallback page
 
 ## Data and behavior
 
 - `posts-data.js` contains the entry dataset.
-- `app.js` renders pages, handles search/filtering, comment storage, and studio autosave.
+- `app.js` renders pages, handles search/filtering, comment storage, studio autosave, and publish payload generation.
 - `styles.css` contains the shared visual system.
+- `openclaw-manifest.json` defines the publishing contract for OpenClaw or any other repo-writing agent.
 
 ## Run locally (PowerShell)
 
@@ -27,9 +28,9 @@ Open:
 
 - [http://127.0.0.1:4173/index.html](http://127.0.0.1:4173/index.html)
 
-## Publish checklist
+## Publishing workflow
 
-1. Replace placeholder URLs in `sitemap.xml` with your real domain.
-2. Keep `robots.txt` and `manifest.webmanifest` at the site root.
-3. Add/replace posts in `posts-data.js`.
-4. Verify no identifying details are present before publishing.
+1. Draft the entry in `studio.html`.
+2. Copy the generated publish JSON.
+3. Have OpenClaw append the payload to `posts-data.js` using `openclaw-manifest.json`.
+4. Commit, push, and deploy.
