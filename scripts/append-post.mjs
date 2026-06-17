@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import vm from "node:vm";
 
 const repoRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const dataPath = path.join(repoRoot, "posts-data.js");
@@ -63,8 +64,8 @@ async function readExistingPosts() {
   if (!source.startsWith(prefix) || !source.trimEnd().endsWith(suffix)) {
     throw new Error("posts-data.js is not in the expected format.");
   }
-  const jsonText = source.slice(prefix.length, source.lastIndexOf(suffix));
-  return JSON.parse(jsonText);
+  const objectText = source.slice(prefix.length, source.lastIndexOf(suffix));
+  return vm.runInNewContext(objectText);
 }
 
 async function writePosts(posts) {
