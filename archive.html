@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Theme Archive | Faded Film Notebook</title>
+  <meta
+    name="description"
+    content="Browse reflective blog entries by theme: healing, transitions, memory, hope, and recovery."
+  />
+  <meta name="robots" content="index,follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=Caveat:wght@500;700&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="archive">
+  <main class="site-shell">
+    <nav class="site-nav" aria-label="Primary">
+      <div class="brand-block">
+        <p class="brand-subtitle">Personal Modern Blog</p>
+        <a class="brand-title" href="index.html">Faded Film Notebook</a>
+      </div>
+      <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        Menu
+      </button>
+      <ul id="navMenu" class="nav-links">
+        <li><a data-nav="home" href="index.html">Home</a></li>
+        <li><a data-nav="archive" href="archive.html">Themes</a></li>
+        <li><a data-nav="post" href="post.html">Latest Entry</a></li>
+        <li><a data-nav="studio" href="studio.html">Writing Studio</a></li>
+        <li><a data-nav="about" href="about.html">About</a></li>
+      </ul>
+    </nav>
+
+    <header class="hero-card hero-secondary">
+      <div>
+        <p class="hero-kicker">Theme archive</p>
+        <h1>Read by emotional thread, not only by date.</h1>
+        <p class="hero-text">
+          Each theme groups notes that echo one another, even when the days that made them felt unrelated.
+        </p>
+      </div>
+      <img src="assets/images/desk-light.png" alt="A writing desk lit by warm window light." />
+    </header>
+
+    <section class="layout-grid archive-grid">
+      <aside class="panel archive-side">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow-note">Quick filter</p>
+            <h2>Follow the feeling.</h2>
+          </div>
+        </div>
+        <div id="archiveFilters" class="tag-filters" aria-label="Filter archive themes"></div>
+        <p id="archiveInfo" class="meta-line"></p>
+        <div id="archiveHighlights" class="mini-entry-stack" aria-live="polite"></div>
+      </aside>
+
+      <article class="panel panel-main">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow-note">Theme groups</p>
+            <h2>Every archive trail stays personal.</h2>
+          </div>
+          <p class="section-copy">Themes help the writing feel navigable without turning it into a timeline dossier.</p>
+        </div>
+        <div id="archiveGroups" class="entry-list" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      <p>Theme trails make it easier to follow growth without exposing personal coordinates.</p>
+      <p>
+        <a class="inline-link" href="studio.html">Open writing studio</a>
+        ·
+        <a class="inline-link" href="about.html">Safety and boundaries</a>
+      </p>
+    </footer>
+  </main>
+
+  <script src="posts-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

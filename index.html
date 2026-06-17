@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faded Film Notebook | Tactile Digital Diary</title>
+  <meta
+    name="description"
+    content="A personal, modern blog with tactile diary styling, reflective writing, and theme-based navigation."
+  />
+  <meta name="robots" content="index,follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=Caveat:wght@500;700&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="home">
+  <main class="site-shell">
+    <nav class="site-nav" aria-label="Primary">
+      <div class="brand-block">
+        <p class="brand-subtitle">Personal Modern Blog</p>
+        <a class="brand-title" href="index.html">Faded Film Notebook</a>
+      </div>
+      <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        Menu
+      </button>
+      <ul id="navMenu" class="nav-links">
+        <li><a data-nav="home" href="index.html">Home</a></li>
+        <li><a data-nav="archive" href="archive.html">Themes</a></li>
+        <li><a data-nav="post" href="post.html">Latest Entry</a></li>
+        <li><a data-nav="studio" href="studio.html">Writing Studio</a></li>
+        <li><a data-nav="about" href="about.html">About</a></li>
+      </ul>
+    </nav>
+
+    <header class="hero-card hero-home">
+      <div class="hero-copy">
+        <p class="hero-kicker">Notes on becoming</p>
+        <h1>Personal writing for soft days, loud hearts, and unfinished healing.</h1>
+        <p class="hero-text">
+          This notebook keeps emotional truth visible while private details stay blurred at the edges.
+        </p>
+        <div class="hero-actions">
+          <a class="button-link accent" href="studio.html">Write in the studio</a>
+          <a class="button-link" href="archive.html">Browse by theme</a>
+        </div>
+        <div class="hero-swatches" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div id="featuredEntry" class="hero-featured" aria-live="polite"></div>
+    </header>
+
+    <section class="layout-grid home-grid">
+      <article class="panel panel-main">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow-note">Notebook index</p>
+            <h2>Find the note that fits today.</h2>
+          </div>
+          <p class="section-copy">Search by feeling, follow a theme, or open the latest entry.</p>
+        </div>
+
+        <div class="toolbar">
+          <label for="searchInput">Search entries</label>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Try healing, waiting, memory, tenderness..."
+            autocomplete="off"
+          />
+          <div id="themeFilters" class="tag-filters" aria-label="Filter entries by theme"></div>
+        </div>
+
+        <p id="resultsCount" class="meta-line"></p>
+        <div id="entriesList" class="entry-list" aria-live="polite"></div>
+      </article>
+
+      <aside class="stack-column">
+        <article class="panel panel-ink compass-panel">
+          <p class="eyebrow-note">Writing compass</p>
+          <h2>Design for feeling, not exposure.</h2>
+          <p>
+            Public enough to resonate. Private enough to protect what still needs quiet.
+          </p>
+          <ul class="compact-list">
+            <li>Daily short entries</li>
+            <li>Theme-led browsing</li>
+            <li>Open comments with boundaries</li>
+          </ul>
+          <img src="assets/images/notebook-tea.png" alt="Notebook, tea, and glasses on cream bedding." />
+        </article>
+
+        <article class="panel notes-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow-note">Pinned notes</p>
+              <h2>Small reminders from the week.</h2>
+            </div>
+          </div>
+          <div id="noteStream" class="note-stream" aria-live="polite"></div>
+        </article>
+      </aside>
+    </section>
+
+    <footer class="site-footer">
+      <p>Faded Film Notebook is a tactile diary on the open web: intimate, modern, and deliberately bounded.</p>
+      <p>
+        <a class="inline-link" href="studio.html">Open the studio</a>
+        ·
+        <a class="inline-link" href="about.html">Read the boundaries</a>
+      </p>
+    </footer>
+  </main>
+
+  <script src="posts-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

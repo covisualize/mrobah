@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entry | Faded Film Notebook</title>
+  <meta
+    name="description"
+    content="Read reflective personal writing with a tactile diary aesthetic and open comments."
+  />
+  <meta name="robots" content="index,follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=Caveat:wght@500;700&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="post">
+  <main class="site-shell">
+    <nav class="site-nav" aria-label="Primary">
+      <div class="brand-block">
+        <p class="brand-subtitle">Personal Modern Blog</p>
+        <a class="brand-title" href="index.html">Faded Film Notebook</a>
+      </div>
+      <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        Menu
+      </button>
+      <ul id="navMenu" class="nav-links">
+        <li><a data-nav="home" href="index.html">Home</a></li>
+        <li><a data-nav="archive" href="archive.html">Themes</a></li>
+        <li><a data-nav="post" href="post.html">Latest Entry</a></li>
+        <li><a data-nav="studio" href="studio.html">Writing Studio</a></li>
+        <li><a data-nav="about" href="about.html">About</a></li>
+      </ul>
+    </nav>
+
+    <section class="post-layout">
+      <article class="panel panel-main post-panel" id="postArticle" aria-live="polite"></article>
+
+      <aside class="stack-column">
+        <article class="panel panel-ink post-side-visual" id="postSidebarCard"></article>
+        <article class="panel">
+          <h2>Entry Navigation</h2>
+          <div id="postNav"></div>
+          <hr class="divider" />
+          <h3>Related in Theme</h3>
+          <div id="relatedEntries" class="mini-entry-stack"></div>
+        </article>
+      </aside>
+    </section>
+
+    <section class="panel panel-ink comments-panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow-note">Open comments</p>
+          <h2>Leave a careful note.</h2>
+        </div>
+        <p class="section-copy">Respond to the feeling, not the writer’s identity.</p>
+      </div>
+      <form id="commentForm" class="comment-form">
+        <label for="commentName">Name (optional)</label>
+        <input
+          id="commentName"
+          name="commentName"
+          type="text"
+          maxlength="50"
+          placeholder="Anonymous Reader"
+        />
+
+        <label for="commentMessage">Comment</label>
+        <textarea
+          id="commentMessage"
+          name="commentMessage"
+          required
+          maxlength="1000"
+          placeholder="Write your response..."
+        ></textarea>
+
+        <button type="submit">Post comment</button>
+      </form>
+      <ul id="commentsList" class="comments-list" aria-live="polite"></ul>
+    </section>
+
+    <footer class="site-footer">
+      <p>Boundaries protect the writer. Compassion protects the room.</p>
+      <p>
+        <a class="inline-link" href="studio.html">Write your own entry</a>
+        ·
+        <a class="inline-link" href="about.html">Comment guidelines</a>
+      </p>
+    </footer>
+  </main>
+
+  <script src="posts-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
