@@ -1,4 +1,4 @@
-# Mr Obah's Journal
+# MrObah
 
 Personal journal site with themed entries, a built-in writing studio, and an OpenClaw-friendly publish handoff.
 

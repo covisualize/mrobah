@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var siteName = "Mr Obah's Journal";
+  var siteName = "MrObah";
   var posts = Array.isArray(window.BLOG_POSTS) ? window.BLOG_POSTS.slice() : [];
   posts.sort(function (a, b) {
     return new Date(b.date).getTime() - new Date(a.date).getTime();

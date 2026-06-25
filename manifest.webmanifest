@@ -1,6 +1,6 @@
 {
-  "name": "Mr Obah's Journal",
-  "short_name": "Mr Obah",
+  "name": "MrObah",
+  "short_name": "MrObah",
   "description": "A reflective personal journal on work, life, discipline, and becoming.",
   "start_url": "/index.html",
   "display": "standalone",
