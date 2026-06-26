@@ -1,7 +1,7 @@
 {
   "name": "mr-obahs-journal",
   "siteName": "MrObah",
-  "workspacePathWsl": "/root/.openclaw/workspace/mrobah",
+  "workspacePathWsl": "/root/.openclaw/workspace/ideas-in-motion/mrobah-blog",
   "repoPathWindows": "C:/Users/charl/blog-plan",
   "publishContractVersion": 1,
   "entryDataFile": "posts-data.js",
