@@ -1,0 +1,32 @@
+{
+  "name": "mr-obahs-journal",
+  "siteName": "MrObah",
+  "workspacePathWsl": "/root/.openclaw/workspace/ideas-in-motion/mrobah-blog",
+  "repoPathWindows": "C:/Users/charl/blog-plan",
+  "publishContractVersion": 1,
+  "entryDataFile": "posts-data.js",
+  "appendCommand": "node scripts/append-post.mjs",
+  "deployCommand": "vercel deploy -y --no-wait --scope covisualizes-projects",
+  "gitPushCommand": "git push origin main",
+  "payloadShape": {
+    "title": "string",
+    "slug": "string optional",
+    "date": "YYYY-MM-DD optional",
+    "theme": "string",
+    "readingTime": "string optional",
+    "mood": "string optional",
+    "excerpt": "string optional",
+    "quote": "string optional",
+    "image": "string optional",
+    "imageAlt": "string optional",
+    "content": [
+      "paragraph string",
+      "paragraph string"
+    ]
+  },
+  "agentNotes": [
+    "Generate or refine the entry text first, then emit one JSON object matching payloadShape.",
+    "Pipe the JSON into `node scripts/append-post.mjs` from the repo root.",
+    "After appending, review the diff, commit, push, and deploy."
+  ]
+}
