@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing Studio | MrObah</title>
+  <meta
+    name="description"
+    content="Draft entries for MrObah with autosave, prompts, and an OpenClaw-ready publish payload."
+  />
+  <meta name="robots" content="noindex,follow" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("mrobah-theme");
+        if (!t) {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Instrument+Sans:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="studio">
+  <main class="site-shell wide">
+    <nav class="site-nav" aria-label="Primary">
+      <a class="brand-title" href="index.html">MrObah</a>
+      <ul class="nav-links">
+        <li><a data-nav="home" href="index.html">Writing</a></li>
+        <li><a data-nav="archive" href="archive.html">Themes</a></li>
+        <li><a data-nav="about" href="about.html">About</a></li>
+        <li>
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch between light and dark mode">
+            <span class="icon-moon" aria-hidden="true">&#9790;</span>
+            <span class="icon-sun" aria-hidden="true">&#9728;</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <p class="eyebrow">Writing studio &mdash; private drafting space</p>
+    <h1>Write first. Shape it into a publishable entry second.</h1>
+    <p class="intro-line" style="margin-bottom: 2rem;">
+      Draft in-browser with autosave, then hand a clean payload to OpenClaw when the note is ready.
+    </p>
+
+    <section class="studio-layout">
+      <div class="studio-pane">
+        <div class="draft-field">
+          <label for="draftTitle">Entry title</label>
+          <input id="draftTitle" type="text" maxlength="140" placeholder="What became clear today&hellip;" />
+        </div>
+        <div class="draft-field">
+          <label for="draftTheme">Theme</label>
+          <select id="draftTheme">
+            <option>Building in Public</option>
+            <option>Creative Discipline</option>
+            <option>Personal Growth</option>
+            <option>Reflection</option>
+            <option>Work and Meaning</option>
+            <option>Writing Life</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="draft-field">
+          <label for="draftBody">Entry body</label>
+          <textarea
+            id="draftBody"
+            class="draft-editor"
+            placeholder="Write the entry in paragraphs. One thought per paragraph works best for the publish payload&hellip;"
+          ></textarea>
+        </div>
+
+        <p class="meta-line">
+          Words: <span id="draftWordCount">0</span> &nbsp;&middot;&nbsp; Read time: <span id="draftReadTime">0 min</span>
+        </p>
+
+        <div class="draft-actions">
+          <button id="saveDraftBtn" type="button" class="button-primary">Save draft now</button>
+          <button id="exportDraftBtn" type="button" class="button-quiet">Export .txt</button>
+          <button id="copyPayloadBtn" type="button" class="button-quiet">Copy publish JSON</button>
+          <button id="clearDraftBtn" type="button" class="button-quiet">Clear draft</button>
+        </div>
+        <p id="draftStatus" class="draft-status">No local draft saved yet.</p>
+      </div>
+
+      <aside class="studio-aside">
+        <article class="aside-card">
+          <p class="eyebrow">Live preview</p>
+          <p id="draftPreviewTheme" class="meta-line">Building in Public</p>
+          <h2 id="draftPreviewTitle">Untitled entry</h2>
+          <p id="draftPreviewBody">
+            Begin with the sentence you have been postponing. The preview will settle here as you write.
+          </p>
+        </article>
+
+        <article class="aside-card">
+          <p class="eyebrow">OpenClaw handoff</p>
+          <h2>Publish-ready payload</h2>
+          <p class="meta-line">Suggested slug: <span id="publishSlug">journal-entry</span></p>
+          <p class="meta-line">Excerpt: <span id="publishExcerpt">A new note from the journal.</span></p>
+          <pre id="publishPayload" class="code-block"></pre>
+        </article>
+
+        <article class="aside-card">
+          <h2>Prompt deck</h2>
+          <p>Use a prompt card when you need momentum instead of perfection.</p>
+          <div id="promptList" class="prompt-list"></div>
+        </article>
+      </aside>
+    </section>
+
+    <footer class="site-footer">
+      <p>Your writing belongs to you first. Publishing is optional.</p>
+    </footer>
+  </main>
+
+  <script src="posts-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

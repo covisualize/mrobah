@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entry | MrObah</title>
+  <meta
+    name="description"
+    content="Read reflective personal writing from the MrObah journal."
+  />
+  <meta name="robots" content="index,follow" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("mrobah-theme");
+        if (!t) {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Instrument+Sans:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="post">
+  <main class="site-shell">
+    <nav class="site-nav" aria-label="Primary">
+      <a class="brand-title" href="index.html">MrObah</a>
+      <ul class="nav-links">
+        <li><a data-nav="home" href="index.html">Writing</a></li>
+        <li><a data-nav="archive" href="archive.html">Themes</a></li>
+        <li><a data-nav="about" href="about.html">About</a></li>
+        <li>
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch between light and dark mode">
+            <span class="icon-moon" aria-hidden="true">&#9790;</span>
+            <span class="icon-sun" aria-hidden="true">&#9728;</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <article id="postArticle" aria-live="polite"></article>
+
+    <nav id="postNav" aria-label="Entry navigation"></nav>
+
+    <section aria-label="Related entries">
+      <p class="eyebrow">Related in theme</p>
+      <div id="relatedEntries" class="related-list"></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="comments-section" aria-label="Comments">
+      <p class="eyebrow">Notes from readers</p>
+      <form id="commentForm" class="comment-form">
+        <label for="commentName">Name (optional)</label>
+        <input
+          id="commentName"
+          name="commentName"
+          type="text"
+          maxlength="50"
+          placeholder="Anonymous Reader"
+        />
+
+        <label for="commentMessage">Comment</label>
+        <textarea
+          id="commentMessage"
+          name="commentMessage"
+          required
+          maxlength="1000"
+          placeholder="Respond to the entry itself, kindly."
+        ></textarea>
+
+        <button type="submit">Post comment</button>
+      </form>
+      <ul id="commentsList" class="comments-list" aria-live="polite"></ul>
+    </section>
+
+    <section class="newsletter" aria-label="Newsletter signup">
+      <h2>Get new entries by email</h2>
+      <p>An occasional email when something new is published. No noise, and you can unsubscribe anytime.</p>
+      <form id="newsletterForm" class="newsletter-form" method="post" target="_blank">
+        <input type="email" name="email" required placeholder="you@example.com" aria-label="Email address" />
+        <button type="submit" class="button-primary">Subscribe</button>
+      </form>
+      <p id="newsletterNote" class="newsletter-note">Delivered by Buttondown. Your address is never shared.</p>
+    </section>
+
+    <footer class="site-footer">
+      <p>Boundaries protect the writer. Compassion protects the room.</p>
+      <p><a href="about.html">Comment guidelines</a></p>
+    </footer>
+  </main>
+
+  <script src="posts-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

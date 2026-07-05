@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About | MrObah</title>
+  <meta
+    name="description"
+    content="About MrObah: a personal writing space, publishing rhythm, and thoughtful comment standards."
+  />
+  <meta name="robots" content="index,follow" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("mrobah-theme");
+        if (!t) {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Instrument+Sans:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="about">
+  <main class="site-shell">
+    <nav class="site-nav" aria-label="Primary">
+      <a class="brand-title" href="index.html">MrObah</a>
+      <ul class="nav-links">
+        <li><a data-nav="home" href="index.html">Writing</a></li>
+        <li><a data-nav="archive" href="archive.html">Themes</a></li>
+        <li><a data-nav="about" href="about.html">About</a></li>
+        <li>
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch between light and dark mode">
+            <span class="icon-moon" aria-hidden="true">&#9790;</span>
+            <span class="icon-sun" aria-hidden="true">&#9728;</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="prose">
+      <h1>About this journal</h1>
+      <p class="intro-line" style="margin-bottom: 2rem;">
+        A personal writing practice with room for both thought and discipline.
+      </p>
+
+      <section>
+        <p>
+          MrObah is where reflections on work, life, growth, and creativity get turned into a steady
+          public record. It is a first-person journal focused on thoughtful, lived experience &mdash;
+          a place to write clearly about work, discipline, change, and meaning, where consistency
+          matters more than perfection.
+        </p>
+        <p>
+          It is not a stream of unfinished takes posted for noise, not a place for invasive
+          speculation or performative outrage, and not a replacement for care, wisdom, or real
+          conversation offline.
+        </p>
+      </section>
+
+      <section>
+        <h2>Publishing rhythm</h2>
+        <p>
+          Entries are drafted privately first, then shaped once the thought has settled. The aim is
+          writing that stays grounded, readable, and specific &mdash; published often enough to build
+          continuity, never so often that it becomes pressure.
+        </p>
+      </section>
+
+      <section>
+        <h2>Comment standard</h2>
+        <ul>
+          <li>Respond to the idea, argument, or experience in the entry.</li>
+          <li>Stay kind, grounded, and useful.</li>
+          <li>No invasive questions, harassment, or identity hunts.</li>
+          <li>Comments that damage the room may be removed.</li>
+        </ul>
+      </section>
+
+      <section>
+        <p>If a note helps you think more clearly, it has done enough.</p>
+      </section>
+    </div>
+
+    <section class="newsletter" aria-label="Newsletter signup">
+      <h2>Get new entries by email</h2>
+      <p>An occasional email when something new is published. No noise, and you can unsubscribe anytime.</p>
+      <form id="newsletterForm" class="newsletter-form" method="post" target="_blank">
+        <input type="email" name="email" required placeholder="you@example.com" aria-label="Email address" />
+        <button type="submit" class="button-primary">Subscribe</button>
+      </form>
+      <p id="newsletterNote" class="newsletter-note">Delivered by Buttondown. Your address is never shared.</p>
+    </section>
+
+    <footer class="site-footer">
+      <p>Built for continuity, clarity, and a voice that can keep showing up.</p>
+    </footer>
+  </main>
+
+  <script src="posts-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

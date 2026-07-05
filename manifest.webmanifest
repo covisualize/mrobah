@@ -1,0 +1,17 @@
+{
+  "name": "MrObah",
+  "short_name": "MrObah",
+  "description": "A reflective personal journal on work, life, discipline, and becoming.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f2eadc",
+  "theme_color": "#2a2520",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
