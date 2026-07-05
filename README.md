@@ -2,6 +2,28 @@
 
 Personal journal site with themed entries, a built-in writing studio, and an OpenClaw-friendly publish handoff.
 
+## Design (2026 redesign)
+
+- Cozy & literary visual system: Fraunces display serif, Source Serif 4 body, cream paper palette with a terracotta accent.
+- Light and dark mode: follows the visitor's system preference, with a manual toggle in the nav (persisted in localStorage).
+- Single reading column (~68 characters per line) tuned for readability; WCAG AA contrast in both modes.
+- The Writing Studio is intentionally not linked in the public nav — bookmark `studio.html` directly.
+
+## Newsletter setup (one-time)
+
+The signup forms are wired for [Buttondown](https://buttondown.com). Create a free
+account, then set your username in `posts-data.js`:
+
+```js
+window.SITE_CONFIG = { buttondownUsername: "your-username" };
+```
+
+Until then, the form shows a friendly "not connected yet" note instead of submitting.
+
+## Theme descriptions
+
+Archive theme blurbs live in `window.THEME_DESCRIPTIONS` in `posts-data.js` — edit freely.
+
 ## Included pages
 
 - `index.html` - homepage with search + theme filters

@@ -9,10 +9,21 @@
     content="A reflective personal journal by MrObah, with grounded writing on work, life, discipline, and becoming."
   />
   <meta name="robots" content="index,follow" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("mrobah-theme");
+        if (!t) {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=Caveat:wght@500;700&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Instrument+Sans:wght@400;500&display=swap"
     rel="stylesheet"
   />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -22,99 +33,53 @@
 <body data-page="home">
   <main class="site-shell">
     <nav class="site-nav" aria-label="Primary">
-      <div class="brand-block">
-        <p class="brand-subtitle">Personal Journal</p>
-        <a class="brand-title" href="index.html">MrObah</a>
-      </div>
-      <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
-        Menu
-      </button>
-      <ul id="navMenu" class="nav-links">
-        <li><a data-nav="home" href="index.html">Home</a></li>
+      <a class="brand-title" href="index.html">MrObah</a>
+      <ul class="nav-links">
+        <li><a data-nav="home" href="index.html">Writing</a></li>
         <li><a data-nav="archive" href="archive.html">Themes</a></li>
-        <li><a data-nav="post" href="post.html">Latest Entry</a></li>
-        <li><a data-nav="studio" href="studio.html">Writing Studio</a></li>
         <li><a data-nav="about" href="about.html">About</a></li>
+        <li>
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch between light and dark mode">
+            <span class="icon-moon" aria-hidden="true">&#9790;</span>
+            <span class="icon-sun" aria-hidden="true">&#9728;</span>
+          </button>
+        </li>
       </ul>
     </nav>
 
-    <header class="hero-card hero-home">
-      <div class="hero-copy">
-        <p class="hero-kicker">Notes on work, life, and becoming</p>
-        <h1>A grounded journal about building, reflection, discipline, and the shape of an ordinary life.</h1>
-        <p class="hero-text">
-          This is where ideas become entries, drafts become patterns, and lived experience gets written down before it disappears.
-        </p>
-        <div class="hero-actions">
-          <a class="button-link accent" href="studio.html">Write in the studio</a>
-          <a class="button-link" href="archive.html">Browse by theme</a>
-        </div>
-        <div class="hero-swatches" aria-hidden="true">
-          <span></span><span></span><span></span><span></span>
-        </div>
+    <h1 class="intro-line">Notes on work, life, and becoming &mdash; written to be returned to.</h1>
+
+    <section aria-label="Latest writing">
+      <p class="eyebrow">Latest writing</p>
+      <div id="entriesList" class="entry-list" aria-live="polite"></div>
+      <p id="resultsCount" class="results-note" hidden></p>
+
+      <div class="browse-bar">
+        <div id="themeFilters" class="tag-filters" aria-label="Filter entries by theme"></div>
+        <input
+          id="searchInput"
+          class="search-field"
+          type="search"
+          placeholder="Search entries&hellip;"
+          aria-label="Search entries"
+          autocomplete="off"
+        />
       </div>
-      <div id="featuredEntry" class="hero-featured" aria-live="polite"></div>
-    </header>
+    </section>
 
-    <section class="layout-grid home-grid">
-      <article class="panel panel-main">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow-note">Journal index</p>
-            <h2>Find the entry that meets the day you are in.</h2>
-          </div>
-          <p class="section-copy">Search by subject, follow a thread, or open the latest entry.</p>
-        </div>
-
-        <div class="toolbar">
-          <label for="searchInput">Search entries</label>
-          <input
-            id="searchInput"
-            type="search"
-            placeholder="Try writing, discipline, work, growth..."
-            autocomplete="off"
-          />
-          <div id="themeFilters" class="tag-filters" aria-label="Filter entries by theme"></div>
-        </div>
-
-        <p id="resultsCount" class="meta-line"></p>
-        <div id="entriesList" class="entry-list" aria-live="polite"></div>
-      </article>
-
-      <aside class="stack-column">
-        <article class="panel panel-ink compass-panel">
-          <p class="eyebrow-note">Journal compass</p>
-          <h2>Write with clarity, then keep returning.</h2>
-          <p>
-            Honest enough to matter. Structured enough to stay sustainable.
-          </p>
-          <ul class="compact-list">
-            <li>Real entries with a repeatable publish flow</li>
-            <li>Theme-led browsing and clean archives</li>
-            <li>Agent-ready drafting for OpenClaw handoff</li>
-          </ul>
-          <img src="assets/images/notebook-tea.png" alt="Notebook, tea, and glasses on cream bedding." />
-        </article>
-
-        <article class="panel notes-panel">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow-note">Pinned notes</p>
-              <h2>Recent thoughts worth revisiting.</h2>
-            </div>
-          </div>
-          <div id="noteStream" class="note-stream" aria-live="polite"></div>
-        </article>
-      </aside>
+    <section class="newsletter" aria-label="Newsletter signup">
+      <h2>Get new entries by email</h2>
+      <p>An occasional email when something new is published. No noise, and you can unsubscribe anytime.</p>
+      <form id="newsletterForm" class="newsletter-form" method="post" target="_blank">
+        <input type="email" name="email" required placeholder="you@example.com" aria-label="Email address" />
+        <button type="submit" class="button-primary">Subscribe</button>
+      </form>
+      <p id="newsletterNote" class="newsletter-note">Delivered by Buttondown. Your address is never shared.</p>
     </section>
 
     <footer class="site-footer">
       <p>MrObah is a personal writing space on the open web, built for consistency, honesty, and return.</p>
-      <p>
-        <a class="inline-link" href="studio.html">Open the studio</a>
-        ·
-        <a class="inline-link" href="about.html">Read the boundaries</a>
-      </p>
+      <p><a href="about.html">About this journal</a></p>
     </footer>
   </main>
 

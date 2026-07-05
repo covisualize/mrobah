@@ -7,6 +7,8 @@
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
 
+  var themeDescriptions = window.THEME_DESCRIPTIONS || {};
+  var siteConfig = window.SITE_CONFIG || {};
   var page = document.body.getAttribute("data-page") || "";
 
   function escapeHtml(value) {
@@ -79,78 +81,87 @@
     });
   }
 
-  function initNavToggle() {
-    var navToggle = document.getElementById("navToggle");
-    var navMenu = document.getElementById("navMenu");
-    if (!navToggle || !navMenu) {
+  /* ---------- Theme (light / dark) ---------- */
+
+  function initThemeToggle() {
+    var toggle = document.getElementById("themeToggle");
+    if (!toggle) {
       return;
     }
-
-    navToggle.addEventListener("click", function () {
-      var isOpen = navMenu.classList.toggle("is-open");
-      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    toggle.addEventListener("click", function () {
+      var root = document.documentElement;
+      var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try {
+        window.localStorage.setItem("mrobah-theme", next);
+      } catch (error) {
+        // Storage may be unavailable; the toggle still works for this visit.
+      }
     });
   }
 
-  function postCardTemplate(post) {
+  /* ---------- Newsletter ---------- */
+
+  function initNewsletter() {
+    var form = document.getElementById("newsletterForm");
+    if (!form) {
+      return;
+    }
+    var username = (siteConfig.buttondownUsername || "").trim();
+    var note = document.getElementById("newsletterNote");
+
+    if (username) {
+      form.setAttribute(
+        "action",
+        "https://buttondown.com/api/emails/embed-subscribe/" + encodeURIComponent(username)
+      );
+      return;
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (note) {
+        note.textContent =
+          "Signup is almost ready — the newsletter service has not been connected yet. Check back soon.";
+      }
+    });
+  }
+
+  /* ---------- Templates ---------- */
+
+  function metaLine(post) {
     return (
-      '<article class="entry-card">' +
-      '<a class="entry-card-media" href="post.html?slug=' +
-      encodeURIComponent(post.slug) +
-      '">' +
-      '<img src="' +
-      escapeHtml(post.image || "") +
-      '" alt="' +
-      escapeHtml(post.imageAlt || post.title) +
-      '" loading="lazy" />' +
-      "</a>" +
-      '<div class="entry-card-body">' +
-      '<div class="meta-line"><span class="tag">' +
-      escapeHtml(post.theme) +
-      "</span><span>" +
+      '<p class="meta-line">' +
       escapeHtml(formatDate(post.date)) +
-      "</span><span>" +
-      escapeHtml(post.readingTime || "") +
-      "</span></div>" +
-      "<h3>" +
-      escapeHtml(post.title) +
-      "</h3>" +
-      '<p class="entry-mood">' +
-      escapeHtml(post.mood || "") +
-      "</p>" +
-      "<p>" +
-      escapeHtml(post.excerpt) +
-      "</p>" +
-      '<a class="entry-link" href="post.html?slug=' +
-      encodeURIComponent(post.slug) +
-      '">Read entry</a>' +
-      "</div>" +
+      ' &middot; <a class="theme-link" href="archive.html?theme=' +
+      encodeURIComponent(post.theme) +
+      '">' +
+      escapeHtml(post.theme) +
+      "</a>" +
+      (post.readingTime ? " &middot; " + escapeHtml(post.readingTime) : "") +
+      "</p>"
+    );
+  }
+
+  function entryRowTemplate(post) {
+    var href = "post.html?slug=" + encodeURIComponent(post.slug);
+    return (
+      '<article class="entry-row">' +
+      metaLine(post) +
+      '<h3><a href="' + href + '">' + escapeHtml(post.title) + "</a></h3>" +
+      '<p class="entry-excerpt">' + escapeHtml(post.excerpt) + "</p>" +
+      '<a class="entry-more" href="' + href + '">Read entry &rarr;</a>' +
       "</article>"
     );
   }
 
-  function miniEntryTemplate(post) {
+  function entryCompactTemplate(post) {
+    var href = "post.html?slug=" + encodeURIComponent(post.slug);
     return (
-      '<a class="mini-entry" href="post.html?slug=' +
-      encodeURIComponent(post.slug) +
-      '">' +
-      '<img src="' +
-      escapeHtml(post.image || "") +
-      '" alt="' +
-      escapeHtml(post.imageAlt || post.title) +
-      '" loading="lazy" />' +
-      '<div class="mini-entry-copy">' +
-      '<span class="mini-entry-date">' +
-      escapeHtml(formatDate(post.date)) +
-      "</span>" +
-      "<strong>" +
-      escapeHtml(post.title) +
-      "</strong>" +
-      "<p>" +
-      escapeHtml(post.excerpt) +
-      "</p>" +
-      "</div>" +
-      "</a>"
+      '<div class="entry-compact">' +
+      '<span class="date">' + escapeHtml(formatDate(post.date)) + "</span>" +
+      '<a href="' + href + '">' + escapeHtml(post.title) + "</a>" +
+      "</div>"
     );
   }
 
@@ -160,72 +171,29 @@
       (isActive ? " is-active" : "") +
       '" type="button" data-theme="' +
       escapeHtml(theme) +
+      '" aria-pressed="' +
+      (isActive ? "true" : "false") +
       '">' +
       escapeHtml(theme) +
       "</button>"
     );
   }
 
+  /* ---------- Home ---------- */
+
   function initHomePage() {
     activateNav("home");
 
-    var featuredNode = document.getElementById("featuredEntry");
     var entriesNode = document.getElementById("entriesList");
     var countNode = document.getElementById("resultsCount");
     var searchInput = document.getElementById("searchInput");
     var filtersNode = document.getElementById("themeFilters");
-    var noteStreamNode = document.getElementById("noteStream");
 
-    if (!featuredNode || !entriesNode || !countNode || !searchInput || !filtersNode || !noteStreamNode) {
+    if (!entriesNode || !countNode || !searchInput || !filtersNode) {
       return;
     }
 
-    var state = {
-      query: "",
-      theme: "All"
-    };
-
-    function renderFeatured(post) {
-      if (!post) {
-        featuredNode.innerHTML = '<div class="empty-state">No entries available yet.</div>';
-        return;
-      }
-
-      featuredNode.innerHTML =
-        '<article class="featured-entry">' +
-        '<div class="featured-entry-copy">' +
-        '<p class="eyebrow-note">Latest journal entry</p>' +
-        "<h2>" +
-        escapeHtml(post.title) +
-        "</h2>" +
-        "<p>" +
-        escapeHtml(post.excerpt) +
-        "</p>" +
-        '<div class="meta-line"><span class="tag">' +
-        escapeHtml(post.theme) +
-        "</span><span>" +
-        escapeHtml(formatDate(post.date)) +
-        "</span><span>" +
-        escapeHtml(post.readingTime || "") +
-        "</span></div>" +
-        '<div class="featured-links">' +
-        '<a class="button-link accent" href="post.html?slug=' +
-        encodeURIComponent(post.slug) +
-        '">Open today\'s note</a>' +
-        '<span class="scribble-line">' +
-        escapeHtml(post.mood || "") +
-        "</span>" +
-        "</div>" +
-        "</div>" +
-        '<div class="featured-entry-media">' +
-        '<img src="' +
-        escapeHtml(post.image || "") +
-        '" alt="' +
-        escapeHtml(post.imageAlt || post.title) +
-        '" />' +
-        "</div>" +
-        "</article>";
-    }
+    var state = { query: "", theme: "All" };
 
     function filterPosts() {
       var query = state.query.trim().toLowerCase();
@@ -262,7 +230,11 @@
 
     function renderEntries() {
       var filtered = filterPosts();
-      countNode.textContent = filtered.length + (filtered.length === 1 ? " entry" : " entries");
+      var isFiltered = state.query.trim() !== "" || state.theme !== "All";
+
+      countNode.hidden = !isFiltered;
+      countNode.textContent =
+        filtered.length + (filtered.length === 1 ? " entry" : " entries") + " found";
 
       if (!filtered.length) {
         entriesNode.innerHTML =
@@ -270,39 +242,11 @@
         return;
       }
 
-      entriesNode.innerHTML = filtered.map(postCardTemplate).join("");
+      entriesNode.innerHTML = filtered.map(entryRowTemplate).join("");
     }
 
-    function renderNoteStream() {
-      noteStreamNode.innerHTML = posts
-        .slice(1, 4)
-        .map(function (post, index) {
-          return (
-            '<article class="note-card note-tone-' +
-            String((index % 3) + 1) +
-            '">' +
-            '<span class="note-date">' +
-            escapeHtml(formatDate(post.date)) +
-            "</span>" +
-            "<h3>" +
-            escapeHtml(post.title) +
-            "</h3>" +
-            "<p>" +
-            escapeHtml(post.mood || post.excerpt) +
-            "</p>" +
-            '<a class="inline-link" href="post.html?slug=' +
-            encodeURIComponent(post.slug) +
-            '">Keep reading</a>' +
-            "</article>"
-          );
-        })
-        .join("");
-    }
-
-    renderFeatured(posts[0]);
     renderFilters();
     renderEntries();
-    renderNoteStream();
 
     searchInput.addEventListener("input", function () {
       state.query = searchInput.value || "";
@@ -310,14 +254,15 @@
     });
   }
 
+  /* ---------- Archive ---------- */
+
   function initArchivePage() {
     activateNav("archive");
 
     var filterNode = document.getElementById("archiveFilters");
     var archiveNode = document.getElementById("archiveGroups");
     var archiveInfo = document.getElementById("archiveInfo");
-    var archiveHighlights = document.getElementById("archiveHighlights");
-    if (!filterNode || !archiveNode || !archiveInfo || !archiveHighlights) {
+    if (!filterNode || !archiveNode || !archiveInfo) {
       return;
     }
 
@@ -357,20 +302,12 @@
       });
     }
 
-    function renderArchiveHighlights() {
-      archiveHighlights.innerHTML = posts
-        .slice(0, 3)
-        .map(function (post) {
-          return miniEntryTemplate(post);
-        })
-        .join("");
-    }
-
     function renderArchiveGroups() {
       var list = state.theme === "All" ? themeList : [state.theme];
+      archiveInfo.hidden = false;
       archiveInfo.textContent =
         state.theme === "All"
-          ? "Browsing every journal thread."
+          ? posts.length + " entries across " + themeList.length + " themes, newest first."
           : 'Browsing "' + state.theme + '" entries.';
 
       if (!list.length) {
@@ -388,18 +325,16 @@
             return "";
           }
 
+          var description = themeDescriptions[theme]
+            ? '<p class="theme-description">' + escapeHtml(themeDescriptions[theme]) + "</p>"
+            : "";
+
           return (
             '<section class="archive-group">' +
-            '<div class="archive-group-header">' +
-            "<h3>" +
-            escapeHtml(theme) +
-            "</h3>" +
-            "<p>" +
-            escapeHtml(themedPosts[0].mood || themedPosts[0].excerpt) +
-            "</p>" +
-            "</div>" +
-            '<div class="entry-list">' +
-            themedPosts.map(postCardTemplate).join("") +
+            "<h2>" + escapeHtml(theme) + "</h2>" +
+            description +
+            '<div class="entry-compact-list" style="border-top: 1px solid var(--line);">' +
+            themedPosts.map(entryCompactTemplate).join("") +
             "</div>" +
             "</section>"
           );
@@ -408,21 +343,21 @@
     }
 
     renderArchiveFilters();
-    renderArchiveHighlights();
     renderArchiveGroups();
   }
 
+  /* ---------- Post ---------- */
+
   function initPostPage() {
-    activateNav("post");
+    activateNav("");
 
     var postNode = document.getElementById("postArticle");
     var relatedNode = document.getElementById("relatedEntries");
     var commentsNode = document.getElementById("commentsList");
     var commentForm = document.getElementById("commentForm");
     var navNode = document.getElementById("postNav");
-    var sidebarCard = document.getElementById("postSidebarCard");
 
-    if (!postNode || !relatedNode || !commentsNode || !commentForm || !navNode || !sidebarCard) {
+    if (!postNode || !relatedNode || !commentsNode || !commentForm || !navNode) {
       return;
     }
 
@@ -448,55 +383,28 @@
     var quoteBlock = currentPost.quote
       ? '<blockquote class="pull-quote">' + escapeHtml(currentPost.quote) + "</blockquote>"
       : "";
+    var figureBlock = currentPost.image
+      ? '<figure class="post-figure"><img src="' +
+        escapeHtml(currentPost.image) +
+        '" alt="' +
+        escapeHtml(currentPost.imageAlt || currentPost.title) +
+        '" /></figure>'
+      : "";
 
     postNode.innerHTML =
-      '<div class="post-hero-media"><img src="' +
-      escapeHtml(currentPost.image || "") +
-      '" alt="' +
-      escapeHtml(currentPost.imageAlt || currentPost.title) +
-      '" /></div>' +
       '<header class="post-header">' +
-      '<div class="meta-line"><span class="tag">' +
-      escapeHtml(currentPost.theme) +
-      "</span><span>" +
-      escapeHtml(formatDate(currentPost.date)) +
-      "</span><span>" +
-      escapeHtml(currentPost.readingTime || "") +
-      "</span></div>" +
-      "<h1>" +
-      escapeHtml(currentPost.title) +
-      "</h1>" +
-      '<p class="entry-mood post-mood">' +
-      escapeHtml(currentPost.mood || "") +
-      "</p>" +
-      "<p>" +
-      escapeHtml(currentPost.excerpt) +
-      "</p>" +
+      metaLine(currentPost) +
+      "<h1>" + escapeHtml(currentPost.title) + "</h1>" +
+      (currentPost.mood
+        ? '<p class="post-mood">' + escapeHtml(currentPost.mood) + "</p>"
+        : "") +
       "</header>" +
-      '<hr class="divider" />' +
-      '<article class="post-body">' +
+      figureBlock +
+      '<div class="post-body">' +
       bodyContent +
       quoteBlock +
-      "</article>" +
-      '<hr class="divider" />' +
-      '<p><a class="inline-link" href="archive.html?theme=' +
-      encodeURIComponent(currentPost.theme) +
-      '">More entries in ' +
-      escapeHtml(currentPost.theme) +
-      "</a></p>";
-
-    sidebarCard.innerHTML =
-      '<img src="' +
-      escapeHtml(currentPost.image || "") +
-      '" alt="' +
-      escapeHtml(currentPost.imageAlt || currentPost.title) +
-      '" />' +
-      '<div class="sidebar-note">' +
-      "<span>From the margin</span>" +
-      "<p>" +
-      escapeHtml(currentPost.quote || currentPost.mood || currentPost.excerpt) +
-      "</p>" +
-      "</div>";
+      "</div>" +
+      '<hr class="divider" />';
 
     var related = posts
       .filter(function (post) {
@@ -505,7 +413,7 @@
       .slice(0, 3);
 
     relatedNode.innerHTML = related.length
-      ? related.map(miniEntryTemplate).join("")
+      ? related.map(entryCompactTemplate).join("")
       : '<div class="empty-state">No related entries yet for this theme.</div>';
 
     var currentIndex = posts.findIndex(function (post) {
@@ -516,18 +424,18 @@
 
     navNode.innerHTML =
       '<div class="post-nav-grid">' +
-      (newer
-        ? '<a class="nav-card" href="post.html?slug=' +
-          encodeURIComponent(newer.slug) +
-          '"><span>Newer</span><strong>' +
-          escapeHtml(newer.title) +
-          "</strong></a>"
-        : '<span class="nav-card is-empty"></span>') +
       (older
         ? '<a class="nav-card" href="post.html?slug=' +
           encodeURIComponent(older.slug) +
-          '"><span>Older</span><strong>' +
+          '"><span>&larr; Older</span><strong>' +
           escapeHtml(older.title) +
+          "</strong></a>"
+        : '<span class="nav-card is-empty"></span>') +
+      (newer
+        ? '<a class="nav-card" style="text-align: right;" href="post.html?slug=' +
+          encodeURIComponent(newer.slug) +
+          '"><span>Newer &rarr;</span><strong>' +
+          escapeHtml(newer.title) +
           "</strong></a>"
         : '<span class="nav-card is-empty"></span>') +
       "</div>";
@@ -606,8 +514,10 @@
     renderComments();
   }
 
+  /* ---------- Studio ---------- */
+
   function initStudioPage() {
-    activateNav("studio");
+    activateNav("");
 
     var titleInput = document.getElementById("draftTitle");
     var themeInput = document.getElementById("draftTheme");
@@ -934,7 +844,8 @@
     activateNav("about");
   }
 
-  initNavToggle();
+  initThemeToggle();
+  initNewsletter();
 
   if (page === "home") {
     initHomePage();
