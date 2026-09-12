@@ -57,20 +57,101 @@ async function readIncomingPayload() {
   return JSON.parse(raw);
 }
 
+/**
+ * Find the end index of a JS array literal, respecting strings and escapes.
+ * @param {string} source
+ * @param {number} start Index of the opening `[`
+ * @returns {number} Index of the matching `]`
+ */
+function findMatchingArrayEnd(source, start) {
+  let depth = 0;
+  let inString = false;
+  let quote = "";
+  let escaped = false;
+
+  for (let i = start; i < source.length; i += 1) {
+    const ch = source[i];
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+      if (ch === "\\") {
+        escaped = true;
+        continue;
+      }
+      if (ch === quote) {
+        inString = false;
+      }
+      continue;
+    }
+    if (ch === "\"" || ch === "'") {
+      inString = true;
+      quote = ch;
+      continue;
+    }
+    if (ch === "[") {
+      depth += 1;
+    } else if (ch === "]") {
+      depth -= 1;
+      if (depth === 0) {
+        return i;
+      }
+    }
+  }
+
+  throw new Error("Unterminated window.BLOG_POSTS array in posts-data.js.");
+}
+
+/**
+ * Locate the `window.BLOG_POSTS = ...;` assignment anywhere in the file.
+ * @param {string} source
+ * @returns {{ assignStart: number, assignEnd: number, valueText: string }}
+ */
+function locateBlogPostsAssignment(source) {
+  const match = source.match(/window\.BLOG_POSTS\s*=/);
+  if (!match) {
+    throw new Error("posts-data.js is missing a window.BLOG_POSTS assignment.");
+  }
+
+  const assignStart = match.index;
+  let cursor = assignStart + match[0].length;
+  while (cursor < source.length && /\s/.test(source[cursor])) {
+    cursor += 1;
+  }
+
+  if (source[cursor] !== "[") {
+    throw new Error("window.BLOG_POSTS must be assigned an array.");
+  }
+
+  const arrayEnd = findMatchingArrayEnd(source, cursor);
+  let semicolon = arrayEnd + 1;
+  while (semicolon < source.length && /\s/.test(source[semicolon]) && source[semicolon] !== ";") {
+    semicolon += 1;
+  }
+  if (source[semicolon] !== ";") {
+    throw new Error("window.BLOG_POSTS assignment must end with a semicolon.");
+  }
+
+  return {
+    assignStart,
+    assignEnd: semicolon,
+    valueText: source.slice(cursor, arrayEnd + 1)
+  };
+}
+
 async function readExistingPosts() {
   const source = await fs.readFile(dataPath, "utf8");
-  const prefix = "window.BLOG_POSTS = ";
-  const suffix = ";";
-  if (!source.startsWith(prefix) || !source.trimEnd().endsWith(suffix)) {
-    throw new Error("posts-data.js is not in the expected format.");
-  }
-  const objectText = source.slice(prefix.length, source.lastIndexOf(suffix));
-  return vm.runInNewContext(objectText);
+  const { valueText } = locateBlogPostsAssignment(source);
+  return vm.runInNewContext(valueText);
 }
 
 async function writePosts(posts) {
+  const source = await fs.readFile(dataPath, "utf8");
+  const { assignStart, assignEnd } = locateBlogPostsAssignment(source);
   const sorted = posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  const output = `window.BLOG_POSTS = ${JSON.stringify(sorted, null, 2)};\n`;
+  const replacement = `window.BLOG_POSTS = ${JSON.stringify(sorted, null, 2)};`;
+  const output = source.slice(0, assignStart) + replacement + source.slice(assignEnd + 1);
   await fs.writeFile(dataPath, output, "utf8");
 }
 
