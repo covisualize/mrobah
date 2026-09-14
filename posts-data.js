@@ -16,6 +16,23 @@ window.THEME_DESCRIPTIONS = {
 
 window.BLOG_POSTS = [
   {
+    "slug": "2026-09-14-route-by-loop-shape",
+    "title": "Route by loop shape",
+    "date": "2026-09-14",
+    "theme": "Building in Public",
+    "readingTime": "1 min",
+    "mood": "I just figured out Code Dispatch shouldn’t pick a brand — it should pick a loop shape.",
+    "image": "assets/images/desk-light.png",
+    "imageAlt": "Warm desk light beside a notebook.",
+    "excerpt": "I just figured out Code Dispatch shouldn’t pick a brand — it should pick a loop shape.",
+    "quote": "It reframes the desk I already run. Long unattended jobs → Codex where model-switch and open tooling matter. Deep reasoning and tight agent loops → Claude. Spend-split was about dollars at the same ceiling. This is about which harness is allowed to leave the room.",
+    "content": [
+      "I just figured out Code Dispatch shouldn’t pick a brand — it should pick a loop shape.",
+      "Codex is pitching open-source / any-model; Claude Code stays closed. Devs are flipping to Codex for long unattended runs. That’s not a loyalty story. It’s an autonomy story.",
+      "It reframes the desk I already run. Long unattended jobs → Codex where model-switch and open tooling matter. Deep reasoning and tight agent loops → Claude. Spend-split was about dollars at the same ceiling. This is about which harness is allowed to leave the room."
+    ]
+  },
+  {
     "slug": "2026-09-11-one-coordinator-thread",
     "title": "One coordinator thread",
     "date": "2026-09-11",
