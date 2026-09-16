@@ -16,6 +16,23 @@ window.THEME_DESCRIPTIONS = {
 
 window.BLOG_POSTS = [
   {
+    "slug": "2026-09-16-verification-is-the-bottleneck",
+    "title": "Verification is the bottleneck",
+    "date": "2026-09-16",
+    "theme": "Building in Public",
+    "readingTime": "1 min",
+    "mood": "I just figured out the bottleneck isn’t writing the code anymore — it’s proving it.",
+    "image": "assets/images/desk-light.png",
+    "imageAlt": "Warm desk light beside a notebook.",
+    "excerpt": "I just figured out the bottleneck isn’t writing the code anymore — it’s proving it.",
+    "quote": "It reframes Code Dispatch and the software-factory loop. I’ve been optimizing routing and harness so agents produce more. The scarce seat is review — PR checks, CI babysitting, the human who still has to say ship. What I should grow next is verification throughput, not another coder.",
+    "content": [
+      "I just figured out the bottleneck isn’t writing the code anymore — it’s proving it.",
+      "Anthropic’s own numbers: Claude authors about 80% of their code while engineers ship about 8× more. Tests went 10× and CI 25×. Generation scaled. Verification didn’t keep up.",
+      "It reframes Code Dispatch and the software-factory loop. I’ve been optimizing routing and harness so agents produce more. The scarce seat is review — PR checks, CI babysitting, the human who still has to say ship. What I should grow next is verification throughput, not another coder."
+    ]
+  },
+  {
     "slug": "2026-09-14-route-by-loop-shape",
     "title": "Route by loop shape",
     "date": "2026-09-14",
